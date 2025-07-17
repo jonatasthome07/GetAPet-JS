@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+import dotenv from "dotenv"
+dotenv.config()
 
 async function main() {
     try {
@@ -8,5 +10,5 @@ async function main() {
         console.log(error)
     }
 }
-
+main()
 export default mongoose
