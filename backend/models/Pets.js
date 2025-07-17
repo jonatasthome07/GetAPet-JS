@@ -10,7 +10,8 @@ const Pet = mongoose.model("Pet", new Schema({
     available: {type: Boolean},
     //Cria relacionamento entre os bancos
     user: Object, 
-    adopter: Object}, 
+    adopter: Object},
+    //Cria "colunas" auxiliares: createdAt e updatedAt
     {timestamps:true}))
 
 export default Pet

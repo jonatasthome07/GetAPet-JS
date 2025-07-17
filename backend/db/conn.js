@@ -9,4 +9,4 @@ async function main() {
     }
 }
 
-export default main
+export default mongoose
