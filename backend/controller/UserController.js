@@ -70,6 +70,19 @@ export default class UserController {
             return res.status(422).json({message: "Senha incorreta. Tente novamente!"})
         }
 
+        //Criação do token com o usuário recém logado
         await createUserToken(user, req,res)
+    }
+
+    static async checkUser (req,res){
+        let currentUser
+        //Se o token veio pelo cabeçalho de autorizaçã no req
+        if (req.headers.authorization){
+            
+        }
+        else{
+            currentUser = null
+        }
+        res.status(200).json(currentUser)
     }
 }
