@@ -83,6 +83,7 @@ export default class UserController {
         
         //Se o token veio pelo cabeçalho de autorizaçã no req
         if (req.headers.authorization){
+            console.log(req.headers.authorization)
             const token = getToken(req)
             //Caso for válido, retorna o payload inserido no .sign()
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
@@ -94,6 +95,15 @@ export default class UserController {
         else{
             currentUser = null
         }
-        res.status(200).json(currentUser)
+        res.status(200).json({currentUser})
+    }
+
+        static async getUserById(req,res){
+            const id = req.params.id
+            const user = await User.findById(id).select("-password")
+            if (!user){
+                return res.status(422).json({message: "Usuário não encontrado!"})
+            }
+            res.status(200).json({user})
     }
 }
