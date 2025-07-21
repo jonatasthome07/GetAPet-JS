@@ -1,6 +1,10 @@
 import User from "../models/User.js"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+
+//Helpers
 import createUserToken from "../helpers/createUserToken.js"
+import getToken from "../helpers/getToken.js"
 
 export default class UserController {
     static async register(req,res){
@@ -76,9 +80,16 @@ export default class UserController {
 
     static async checkUser (req,res){
         let currentUser
+        
         //Se o token veio pelo cabeçalho de autorizaçã no req
         if (req.headers.authorization){
-            
+            const token = getToken(req)
+            //Caso for válido, retorna o payload inserido no .sign()
+            const decoded = jwt.verify(token, process.env.JWT_SECRET)
+            //Acessa o id do usuário
+            currentUser = await User.findById(decoded.id)
+            //Undefined na senha 
+            currentUser.password = undefined
         }
         else{
             currentUser = null
