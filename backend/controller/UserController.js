@@ -64,18 +64,23 @@ export default class UserController {
             return res.status(422).json({message: "Campo obrigatório!"})
         }
 
-        const user = await User.findOne({email:email})
-        if (!user){
+        try {
+            const user = await User.findOne({email:email})
+            if (!user){
             return res.status(422).json({message: "Usuário não encontrado!"})
-        }
+            }
 
-        const checkPass = await bcrypt.compare(password, user.password)
-        if(!checkPass){
+            const checkPass = await bcrypt.compare(password, user.password)
+        
+            if(!checkPass){
             return res.status(422).json({message: "Senha incorreta. Tente novamente!"})
-        }
+            }
 
-        //Criação do token com o usuário recém logado
-        await createUserToken(user, req,res)
+            //Criação do token com o usuário recém logado
+            await createUserToken(user, req,res)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     static async checkUser (req,res){
@@ -83,14 +88,23 @@ export default class UserController {
         
         //Se o token veio pelo cabeçalho de autorizaçã no req
         if (req.headers.authorization){
-            console.log(req.headers.authorization)
-            const token = getToken(req)
-            //Caso for válido, retorna o payload inserido no .sign()
-            const decoded = jwt.verify(token, process.env.JWT_SECRET)
-            //Acessa o id do usuário
-            currentUser = await User.findById(decoded.id)
-            //Undefined na senha 
-            currentUser.password = undefined
+            console.log("Authorization:", req.headers.authorization)
+            
+            try {
+                const token = getToken(req)
+                console.log("Token extraído:", token)
+                
+                //Caso for válido, retorna o payload inserido no .sign()
+                const decoded = jwt.verify(token, process.env.JWT_SECRET)
+                
+                //Acessa o id do usuário
+                currentUser = await User.findById(decoded.id)
+                
+                //Undefined na senha 
+                currentUser.password = undefined    
+            } catch (error) {
+                console.log(error)
+            }
         }
         else{
             currentUser = null
@@ -100,10 +114,19 @@ export default class UserController {
 
         static async getUserById(req,res){
             const id = req.params.id
-            const user = await User.findById(id).select("-password")
-            if (!user){
+            
+            try {
+                
+                //Busco o usuário no banco de dados, com seus dados menos a pass
+                const user = await User.findById(id).select("-password")
+                
+                if (!user){
                 return res.status(422).json({message: "Usuário não encontrado!"})
+                }
+                
+                res.status(200).json({user})
+            } catch (error) {
+              console.log(error)  
             }
-            res.status(200).json({user})
     }
 }

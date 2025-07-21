@@ -11,7 +11,7 @@ const app = express()
 app.use(express.json())
 app.use(express.static("public"))
 
-//Permite o front se comunicar com o back, salvando sessões e enviando headers/tokens
+//Permite o front se comunicar com o back em portas diferentes e o envio de cookies e/ou headers.
 app.use(cors({credentials:true, origin:process.env.CLIENT_URL}))
 
 app.use("/users", userRoutes)
