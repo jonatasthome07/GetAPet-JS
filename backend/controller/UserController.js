@@ -99,6 +99,7 @@ export default class UserController {
                 
                 //Acessa o id do usuário
                 currentUser = await User.findById(decoded.id)
+                console.log(decoded.name)
                 
                 //Undefined na senha 
                 currentUser.password = undefined    
@@ -116,7 +117,6 @@ export default class UserController {
             const id = req.params.id
             
             try {
-                
                 //Busco o usuário no banco de dados, com seus dados menos a pass
                 const user = await User.findById(id).select("-password")
                 
@@ -128,5 +128,9 @@ export default class UserController {
             } catch (error) {
               console.log(error)  
             }
+    }
+
+    static async editUser (req,res){
+        return res.status(200).json({message: "Atualizado com sucesso!"})
     }
 }
