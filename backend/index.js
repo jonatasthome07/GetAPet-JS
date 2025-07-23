@@ -3,6 +3,7 @@ dotenv.config()
 import express from "express"
 import cors from "cors"
 import userRoutes from "./routes/userRoutes.js"
+import petRoutes from "./routes/petRoutes.js"
 import conn from "./db/conn.js"
 import User from "./models/User.js"
 
@@ -15,6 +16,7 @@ app.use(express.static("public"))
 app.use(cors({credentials:true, origin:process.env.CLIENT_URL}))
 
 app.use("/users", userRoutes)
+app.use("/pets", petRoutes)
 
 app.listen(process.env.PORT, ()=>{
     console.log("Conexão realizada com sucesso!")
