@@ -143,6 +143,11 @@ export default class UserController {
         
         const {name, email, password, confirmpassword, phone} = req.body
         let image = ''
+        
+        //Multer já altera e salva de acordo com as configurações
+        if (req.file){
+            user.image = req.file.filename
+        }
 
         if (!mongoose.Types.ObjectId.isValid(user._id)) {
             return res.status(400).json({ message: "ID inválido!" })
