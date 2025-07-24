@@ -5,19 +5,25 @@ import getUserByToken from "../helpers/getUserByToken.js"
 export default class PetController {
     static async create (req,res){
         const {name, age, weight, color} = req.body
+        const images = req.files
+        
         let available = true
 
         if (!name){
-            return res.status(422).json({message: "O nome é um campo obrigatório"})
+            return res.status(422).json({message: "O nome é obrigatório"})
         }
         if (!age){
-            return res.status(422).json({message: "A idade é um campo obrigatório"})
+            return res.status(422).json({message: "A idade é obrigatória"})
         }
         if (!weight){
-            return res.status(422).json({message: "O peso é um campo obrigatório"})
+            return res.status(422).json({message: "O peso é obrigatório"})
         }
         if (!color){
-            return res.status(422).json({message: "A cor é um campo obrigatório"})
+            return res.status(422).json({message: "A cor é obrigatória"})
+        }
+
+        if (images.length === 0){
+            return res.status(422).json({message: "A imagem é obrigatória"})
         }
        
         const token = getToken(req)
@@ -29,6 +35,11 @@ export default class PetController {
             image: user.image,
             phone: user.phone
        }})
+
+       //Percorre o array de imagens e altera o nome
+       images.map((image) => {
+        pet.images.push(image.filename)
+       })
 
         try {
             const newPet = await pet.save()
