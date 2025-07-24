@@ -49,4 +49,13 @@ export default class PetController {
         }
 
     }
+
+    static async getAll(req,res){
+        try {
+            const pets = await Pets.find().sort("-createdAt")
+            res.status(200).json({message: "Nossos pets: ", pets})
+        } catch (error) {
+            res.status(500).json({message: error})
+        }
+    }
 }
