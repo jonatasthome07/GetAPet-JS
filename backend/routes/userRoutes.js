@@ -10,6 +10,7 @@ router.post("/register", UserController.register)
 router.post("/login", UserController.login)
 router.get("/checkuser", UserController.checkUser)
 router.get("/:id", UserController.getUserById)
+//Em qual campo do banco de dados virá as imagens
 router.patch("/edit/:id", verifyToken, imageUpload.single("image"),UserController.editUser)
 
 export default router

@@ -6,8 +6,10 @@ import PetController from "../controller/PetController.js"
 import verifyToken from "../helpers/verifyToken.js"
 import imageUpload from "../helpers/imageUpload.js"
 
+//Em qual campo do banco de dados virá as imagens
 router.post("/create",verifyToken, imageUpload.array("images"), PetController.create)
 router.get("/", PetController.getAll)
 router.get("/mypets", verifyToken, PetController.getAllUserPets)
+router.get("/myadoptions", verifyToken, PetController.getAllUserAdoptions)
 
 export default router

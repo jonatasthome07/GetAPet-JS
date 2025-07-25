@@ -52,6 +52,7 @@ export default class PetController {
 
     static async getAll(req,res){
         try {
+            //Ordena pelo mais recente
             const pets = await Pets.find().sort("-createdAt")
             res.status(200).json({message: "Nossos pets: ", pets})
         } catch (error) {
@@ -64,7 +65,21 @@ export default class PetController {
         const user = await getUserByToken (token)
         
         try {
+            //Ordena pelo mais recente
             const pets = await Pets.find({"user._id": user._id}).sort("-createdAt")
+            res.status(200).json({pets})
+        } catch (error) {
+            res.status(500).json({message: error})
+        }
+    }
+
+    static async getAllUserAdoptions(req,res){
+        const token = getToken(req)
+        const user = await getUserByToken (token)
+        
+        try {
+            //Ordena pelo mais recente
+            const pets = await Pets.find({"adopter._id": user._id}).sort("-createdAt")
             res.status(200).json({pets})
         } catch (error) {
             res.status(500).json({message: error})
