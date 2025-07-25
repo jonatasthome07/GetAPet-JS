@@ -106,4 +106,32 @@ export default class PetController {
             return res.status(500).json({message: error})
         }
     }
+
+    static async removePetById(req,res){
+        const id = req.params.id
+       
+        try {
+            if(!mongoose.isValidObjectId(id)){
+                return res.status(422).json({message: "ID inválido!"})
+            }
+
+        const pet = await Pets.findById(id)
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+        
+        if (!pet){
+            return res.status(404).json({message: "Pet não encontrado!"})
+        }
+
+        if (pet.user._id.toString() !== user._id.toString()){
+            return res.status(422).json({message: "Ação não disponível!"})
+        }
+        
+        await Pets.findByIdAndDelete(id)
+        res.status(200).json({message: "Pet excluído com sucesso!"})
+
+        } catch (error) {
+            return res.status(500).json({message: error})
+        }
+    }
 }
